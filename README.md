@@ -1,10 +1,18 @@
-# EX-02 Implementation of Perceptron for Binary Classification
-### Aim:
-To implement a perceptron for classification using Python.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-### EQUIPMENTS REQUIRED:
+<H3>Name: Mourise jane S</H3>
+<H3>Register no: 212222230085</H3>
+<H3>Date: </H3>
+<H3>Experiment No. 2 </H3>
+
+## Implementation of Perceptron for Binary Classification
+
+# AIM:
+To implement a perceptron for classification using Python<BR>
+
+# EQUIPMENTS REQUIRED:
 Hardware – PCs
 Anaconda – Python 3.7 Installation / Google Colab /Jupiter Notebook
-### RELATED THEORETICAL CONCEPT:
+
+# RELATED THEORETICAL CONCEPT:
 A Perceptron is a basic learning algorithm invented in 1959 by Frank Rosenblatt. It is meant to mimic the working logic of a biological neuron. The human brain is basically a collection of many interconnected neurons. Each one receives a set of inputs, applies some sort of computation on them and propagates the result to other neurons.<BR>
 A Perceptron is an algorithm used for supervised learning of binary classifiers.Given a sample, the neuron classifies it by assigning a weight to its features. To accomplish this a Perceptron undergoes two phases: training and testing. During training phase weights are initialized to an arbitrary value. Perceptron is then asked to evaluate a sample and compare its decision with the actual class of the sample.If the algorithm chose the wrong class weights are adjusted to better match that particular sample. This process is repeated over and over to finely optimize the biases. After that, the algorithm is ready to be tested against a new set of completely unknown samples to evaluate if the trained model is general enough to cope with real-world samples.<BR>
 The important Key points to be focused to implement a perceptron:
@@ -26,7 +34,7 @@ A threshold function, usually Heaviside or sign functions, maps the scalar value
 Indeed if the neuron output is exactly zero it cannot be assumed that the sample belongs to the first sample since it lies on the boundary between the two classes. Nonetheless for the sake of simplicity,ignore this situation.<BR>
 
 
-### ALGORITHM:
+# ALGORITHM:
 STEP 1: Importing the libraries<BR>
 STEP 2:Importing the dataset<BR>
 STEP 3:Plot the data to verify the linear separable dataset and consider only two classes<BR>
@@ -42,16 +50,17 @@ STEP 9:For ‘N ‘ iterations ,do the following:<BR>
         W (i+i)= W(i) + learning_rate*(y(i)-t(i))*x(i)<BR>
 STEP 10:Plot the error for each iteration <BR>
 STEP 11:Print the accuracy<BR>
-### PROGRAM:
-#### DEVELOPED BY:Mourise jane
-#### REGISTOR NO:212222230104
-```Python
-import numpy as np                                                    
-import pandas as pd                                                    
+
+# PROGRAM:
+```python
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+```
+```python
 class Perceptron:
   def __init__(self,learning_rate=0.1):
     self.learning_rate = learning_rate
@@ -70,57 +79,78 @@ class Perceptron:
         self._w += update * xi
         errors += int(update != 0.0)
       self.misclassified_samples.append(errors)
+
   def f(self, x: np.array) -> float:
-      return np.dot(x, self._w) + self._b
+  return np.dot(x, self._w) + self._b
+
   def predict(self, x: np.array):
-      return np.where(self.f(x) >= 0, 1, -1)
+  return np.where(self.f(x) >= 0, 1, -1)
+```
+```python
 url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
 df = pd.read_csv(url, header=None)
 print(df.head())
+
 y = df.iloc[:, 4].values
 x = df.iloc[:, 0:3].values
+```
+```python
 fig = plt.figure()
 ax = plt.axes(projection='3d')
 ax.set_title('Iris data set')
 ax.set_xlabel("Sepal length in width (cm)")
 ax.set_ylabel("Sepal width in width (cm)")
 ax.set_zlabel("Petal length in width (cm)")
-ax.scatter(x[:50,0], x[:50,1], x[:50,2], color='red',marker='o', s=4, label="Iris Setosa")
-ax.scatter(x[50:100,0], x[50:100,1], x[50:100,2], color='blue',marker='^', s=4, label="Iris Versicolour")
-ax.scatter(x[100:150,0], x[100:150,1], x[100:150,2], color='green',marker='x', s=4, label="Iris Virginica")
+
+ax.scatter(x[:50, 0], x[:50, 1], x[:50, 2], color='red',
+         marker='o', s=4, edgecolor='red', label="Iris Setosa")
+ax.scatter(x[50:100, 0], x[50:100, 1], x[50:100, 2], color='blue',
+         marker='^', s=4, edgecolor='blue', label="Iris Versicolour")
+ax.scatter(x[100:150, 0], x[100:150, 1], x[100:150, 2], color='green',
+         marker='x', s=4, edgecolor='green', label="Iris Virginica")
 plt.legend(loc='upper left')
 plt.show()
+```
+```python
 x = x[0:100, 0:2] 
 y = y[0:100]
-plt.figure(figsize=(4,4))
+
 plt.scatter(x[:50, 0], x[:50, 1], color='red', marker='o', label='Setosa')
-plt.scatter(x[50:100, 0], x[50:100, 1], color='blue', marker='x',label='Versicolour')
+plt.scatter(x[50:100, 0], x[50:100, 1], color='blue', marker='x',
+          label='Versicolour')
 plt.xlabel("Sepal length")
 plt.ylabel("Petal length")
 plt.legend(loc='upper left')
 plt.show()
+```
+```python
 y = np.where(y == 'Iris-setosa', 1, -1)
 x[:, 0] = (x[:, 0] - x[:, 0].mean()) / x[:, 0].std()
 x[:, 1] = (x[:, 1] - x[:, 1].mean()) / x[:, 1].std()
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25,random_state=0)
+
 classifier = Perceptron(learning_rate=0.01)
 classifier.fit(x_train, y_train)
 print("accuracy", accuracy_score(classifier.predict(x_test), y_test)*100)
-plt.figure(figsize=(4,4))
+
 plt.plot(range(1, len(classifier.misclassified_samples) + 1),classifier.misclassified_samples, marker='o')
 plt.xlabel('Epoch')
 plt.ylabel('Errors')
 plt.show()
 ```
 
-### OUTPUT:
-<img height=15% width=48% valign =top src="https://github.com/shalinikannan23/Ex-2--NN/assets/118656529/40828fa9-b581-47c2-b6e2-616735fbb0fe">&emsp;&emsp;&emsp;&emsp;&emsp;<img height=15% width=48% src="https://github.com/shalinikannan23/Ex-2--NN/assets/118656529/365373d6-83e7-4815-9b64-0d4dc9a332e9">
 
+# OUTPUT:
 
-<img height=15% width=48% src="https://github.com/shalinikannan23/Ex-2--NN/assets/118656529/ccdb3cf2-72ed-4d54-9861-6e8c63d149af">&emsp;&emsp;&emsp;&emsp;&emsp;<img height=15% width=48% src="https://github.com/shalinikannan23/Ex-2--NN/assets/118656529/656f4591-f5f5-4485-b063-167d57f5e294">
+![image](https://github.com/JoyceBeulah/Ex-2--NN/assets/118343698/028c6ca9-8874-4047-b033-a7e4b929c882)
 
+![image](https://github.com/JoyceBeulah/Ex-2--NN/assets/118343698/69b48320-fa06-4028-ae59-d1e222501ad7)
 
-### RESULT:
-Thus, a single layer perceptron model is implemented using python to classify Iris data set.
+![image](https://github.com/JoyceBeulah/Ex-2--NN/assets/118343698/6c8cf2c9-c560-416f-8a0d-2d742fefe686)
 
- 
+![image](https://github.com/JoyceBeulah/Ex-2--NN/assets/118343698/5081be49-9557-4bea-bc00-d18aed19035e)
+
+![image](https://github.com/JoyceBeulah/Ex-2--NN/assets/118343698/f4112c59-4f91-4f80-a5d0-3da5867f3af7)
+
+# RESULT:
+ Thus, a single layer perceptron model is implemented using python to classify Iris data set.
